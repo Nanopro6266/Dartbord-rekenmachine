@@ -1,3 +1,6 @@
+# @David: Ik heb 't nu in aparte functies, maar als de score niet valide is komt ie in een inf loop
+# K ga dat zsm oplossen mr k moet alleen nu weg...
+
 from time import sleep
 
 score = 501
@@ -8,63 +11,48 @@ scoreLijst = []
 def vraagScore(pijlNummer):
     while True:
         global scoreLijst
-        scoreLijst.clear()
+        scoreLijstFout = []
+        scoreLijstFout.clear()
         score = str(input("Score van pijl " + str(pijlNummer) + ": "))
-        if score.upper() == "BULL":
-            score = 50
-            scoreLijst.append("BULL")
-            return score
-        elif score.upper() == "KLEINE BULL":
-            score = 25
-            scoreLijst.append("KLEINEBULL")
-            return score
-        for tekens in score:
-            scoreLijst.append(tekens)
-        return
+        if score.upper() == "BULL" or score.upper() == "B" or score.upper() == "KLEINE BULL" or score.upper() == "KB":
+            scoreLijstFout.append(score)
+        else:
+            for tekens in score:
+                scoreLijstFout.append(tekens)
+        return scoreLijstFout
         
-def valideerScore(score):
+def valideerScore(scoreLijstFout):
+    scoreLijstGoed = []
+    scoreLijstGoed = scoreLijstFout
     while True:
-        if len(scoreLijst) > 3:
+        if len(scoreLijstFout) > 3:
             print("Deze score is niet valide, probeer het opneiuw:")
             continue
-        if len(scoreLijst) == 2:
-            if scoreLijst[0] == 'd' or scoreLijst[0] == 't' or scoreLijst[0] == 'e':
-                scoreLijst.insert(1,'0')
-            elif scoreLijst[0].isdigit():
-                scoreLijst.insert(0,'e') 
+        if len(scoreLijstFout) == 2:
+            if scoreLijstFout[0] == 'd' or scoreLijstFout[0] == 't' or scoreLijstFout[0] == 'e':
+                scoreLijstGoed.insert(1,'0')
+            elif scoreLijstFout[0].isdigit():
+                scoreLijstGoed.insert(0,'e') 
             else:
                 print("Deze score is niet valide, probeer het opneiuw:")
                 continue
-        if len(scoreLijst) == 1:
-            scoreLijst.insert(0,'e')
-            scoreLijst.insert(1,'0')
-        if int(scoreLijst[1] + scoreLijst[2]) > 20:
+        if len(scoreLijstFout) == 1:
+            scoreLijstGoed.insert(0,'e')
+            scoreLijstGoed.insert(1,'0')
+        if int(scoreLijstGoed[1] + scoreLijstGoed[2]) > 20:
             print("Deze score is niet valide, probeer het opneiuw:")
             continue
-        if scoreLijst[0] == 'd':
-            score = int(scoreLijst[1] + scoreLijst[2]) * 2
-        elif scoreLijst[0] == 't':
-            score = int(scoreLijst[1] + scoreLijst[2]) * 3
+        return scoreLijstGoed
+        
+def berekenScorePijl(scoreLijstGoed):
+    while True:
+        if scoreLijstGoed[0] == 'd':
+            score = int(scoreLijstGoed[1] + scoreLijstGoed[2]) * 2
+        elif scoreLijstGoed[0] == 't':
+            score = int(scoreLijstGoed[1] + scoreLijstGoed[2]) * 3
         elif scoreLijst[0] == 'e':
-            score = int(scoreLijst[1] + scoreLijst[2])
+            score = int(scoreLijstGoed[1] + scoreLijstGoed[2])
         return score
-
-def beurtUitvoeren():
-    score1 = vraagScore("#1")
-    score1 = valideerScore(score1)
-    checkFinish(score1)
-    score2 = vraagScore("#2")
-    score2 = valideerScore(score2)
-    checkFinish(score2)
-    score3 = vraagScore("#3")
-    score3 = valideerScore(score3)
-    checkFinish(score3)
-    berekenScore(score1, score2, score3)
-    return score
-
-def berekenScore(score1, score2, score3):
-    global score
-    score -= (score1 + score2 + score3)
 
 def checkFinish(Pijlscore):
     global beurt
@@ -93,6 +81,33 @@ def checkFinish(Pijlscore):
     else:
         kopieScore -= Pijlscore
     return kopieScore
+
+def berekenScoreBeurt(score1, score2, score3):
+    global score
+    score -= (score1 + score2 + score3)
+
+def beurtUitvoeren():
+    scoreLijstFout1 = vraagScore("#1")
+    scoreLijstGoed1 = valideerScore(scoreLijstFout1)
+    score1 = berekenScorePijl(scoreLijstGoed1)
+    checkFinish(score1)
+    scoreLijstFout2 = vraagScore("#2")
+    scoreLijstGoed2 = valideerScore(scoreLijstFout2)
+    score2 = berekenScorePijl(scoreLijstGoed2)
+    checkFinish(score2)
+    scoreLijstFout3 = vraagScore("#3")
+    scoreLijstGoed3 = valideerScore(scoreLijstFout3)
+    score3 = berekenScorePijl(scoreLijstGoed3)
+    checkFinish(score3)
+    berekenScoreBeurt(score1, score2, score3)
+    return score
+
+
+
+
+
+
+
 
 def startBeurt():
     global beurt
