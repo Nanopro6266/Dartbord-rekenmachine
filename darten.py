@@ -20,6 +20,7 @@ def vraagScore(pijlNummer):
             return score
         for tekens in score:
             scoreLijst.append(tekens)
+        return
         
 def valideerScore(score):
     while True:
@@ -48,12 +49,15 @@ def valideerScore(score):
             score = int(scoreLijst[1] + scoreLijst[2])
         return score
 
-def beurtInvoeren():
+def beurtUitvoeren():
     score1 = vraagScore("#1")
+    score1 = valideerScore(score1)
     checkFinish(score1)
     score2 = vraagScore("#2")
+    score2 = valideerScore(score2)
     checkFinish(score2)
     score3 = vraagScore("#3")
+    score3 = valideerScore(score3)
     checkFinish(score3)
     berekenScore(score1, score2, score3)
     return score
@@ -97,7 +101,7 @@ def startBeurt():
     kopieScore = score
     print("\n")
     print("Beurt",beurt,'\n'+"Aantal punten:",score,'\n')
-    beurtInvoeren()
+    beurtUitvoeren()
     beurt += 1
 
 
