@@ -5,11 +5,11 @@ beurt = 1
 kopieScore = score
 scoreLijst = []
 
-def vraagScore(pijl):
+def vraagScore(pijlNummer):
     while True:
         global scoreLijst
         scoreLijst.clear()
-        score = str(input("Score van pijl " + str(pijl) + ": "))
+        score = str(input("Score van pijl " + str(pijlNummer) + ": "))
         if score.upper() == "BULL":
             score = 50
             scoreLijst.append("BULL")
@@ -20,6 +20,9 @@ def vraagScore(pijl):
             return score
         for tekens in score:
             scoreLijst.append(tekens)
+        
+def valideerScore(score):
+    while True:
         if len(scoreLijst) > 3:
             print("Deze score is niet valide, probeer het opneiuw:")
             continue
@@ -47,11 +50,11 @@ def vraagScore(pijl):
 
 def beurtInvoeren():
     score1 = vraagScore("#1")
-    checkPijlScore(score1)
+    checkFinish(score1)
     score2 = vraagScore("#2")
-    checkPijlScore(score2)
+    checkFinish(score2)
     score3 = vraagScore("#3")
-    checkPijlScore(score3)
+    checkFinish(score3)
     berekenScore(score1, score2, score3)
     return score
 
@@ -59,7 +62,7 @@ def berekenScore(score1, score2, score3):
     global score
     score -= (score1 + score2 + score3)
 
-def checkPijlScore(Pijlscore):
+def checkFinish(Pijlscore):
     global beurt
     global score
     global kopieScore
