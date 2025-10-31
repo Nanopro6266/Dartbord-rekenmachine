@@ -1,8 +1,12 @@
 from time import sleep
 
+# Globals
+
 score = 501
 beurt = 1
 kopieScore = score
+
+# Functies
 
 def vraagScore(pijlNummer):
     while True:
@@ -10,17 +14,19 @@ def vraagScore(pijlNummer):
         scoreLijstFout.clear()
         score = str(input("Score van pijl " + str(pijlNummer) + ": "))
         if score.upper() == "BULL" or score.upper() == "B" or score.upper() == "KLEINE BULL" or score.upper() == "KB":
-            scoreLijstFout.append(score)
+            scoreLijstFout.append(score.upper())
         else:
             for tekens in score:
                 scoreLijstFout.append(tekens)
         return scoreLijstFout
-        
+       
 def valideerScore(scoreLijstFout):
     scoreLijstGoed = []
     scoreLijstGoed = scoreLijstFout
+    if scoreLijstFout[0] == "BULL" or scoreLijstFout[0] == "B" or scoreLijstFout[0] == "KLEINE BULL" or scoreLijstFout[0] == "KB":
+        return scoreLijstFout
     if len(scoreLijstFout) > 3:
-        print("Deze score is niet valide, probeer het opneiuw:")
+        print("Deze score is niet valide, probeer het opneiuw:(score > 3)")
         scoreLijstFout = vraagScore("")
     elif len(scoreLijstFout) == 2:
         if scoreLijstFout[0] == 'd' or scoreLijstFout[0] == 't' or scoreLijstFout[0] == 'e':
@@ -28,23 +34,27 @@ def valideerScore(scoreLijstFout):
         elif scoreLijstFout[0].isdigit():
             scoreLijstGoed.insert(0,'e') 
         else:
-            print("Deze score is niet valide, probeer het opneiuw:")
+            print("Deze score is niet valide, probeer het opneiuw:(score 2)")
             scoreLijstFout = vraagScore("")
     elif len(scoreLijstFout) == 1:
         scoreLijstGoed.insert(0,'e')
         scoreLijstGoed.insert(1,'0')
     else:
-        if scoreLijstGoed[0] != 'e' and scoreLijstGoed != 'd' and scoreLijstGoed[0] != 't':
-            print("Deze score is niet valide, probeer het opneiuw:")
+        if scoreLijstGoed[0] != 'e' and scoreLijstGoed[0] != 'd' and scoreLijstGoed[0] != 't':
+            print("Deze score is niet valide, probeer het opneiuw (edt):")
             scoreLijstGoed = vraagScore("")
         if int(scoreLijstGoed[1] + scoreLijstGoed[2]) > 20:
-            print("Deze score is niet valide, probeer het opneiuw:")
+            print("Deze score is niet valide, probeer het opneiuw (te hoog):")
             scoreLijstGoed = vraagScore("")
     return scoreLijstGoed
         
 def berekenScorePijl(scoreLijstGoed):
     while True:
-        if scoreLijstGoed[0] == 'd':
+        if scoreLijstGoed[0] == "BULL" or scoreLijstGoed[0] == "B":
+            score = 50
+        elif scoreLijstGoed[0] == "KLEINE BULL" or scoreLijstGoed[0] == "KB":
+            score = 25
+        elif scoreLijstGoed[0] == 'd':
             score = int(scoreLijstGoed[1] + scoreLijstGoed[2]) * 2
         elif scoreLijstGoed[0] == 't':
             score = int(scoreLijstGoed[1] + scoreLijstGoed[2]) * 3
@@ -108,7 +118,7 @@ def startBeurt():
     global kopieScore
     kopieScore = score
     print("\n")
-    print("Beurt",beurt,'\n'+"Aantal punten:",score,'\n')
+    print("Beurt",beurt,'\n'+"Aantal punten nog te gooien:",score,'\n')
     beurtUitvoeren()
     beurt += 1
 
@@ -130,6 +140,9 @@ def herstartSpel():
 
 
 # Hoofdprogramma
+print("\n")
+print("Welkom bij deze dartbord rekenmachine! Begin direct met spelen:")
+sleep(1)
 startSpel()
     
  
